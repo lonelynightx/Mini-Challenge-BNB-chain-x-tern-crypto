@@ -6,4 +6,4 @@ This is a decentralized "Stone-Scissors-Paper" game app.
 1) The player can battle with another player.
 2) The player can fight against a smart contract.
 
-## Dapp consists of 4 smart contracts
+###### Dapp consists of 4 smart contracts
