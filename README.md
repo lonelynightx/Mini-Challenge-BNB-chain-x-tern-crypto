@@ -1,6 +1,6 @@
 # Mini-Challenge-BNB-chain-x-tern-crypto
 
-About
+## About
 This is a decentralized Stone-Scissors-Paper game app. 
 There are 2 modes:
 1) The player can battle with another player.
