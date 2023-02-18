@@ -34,7 +34,7 @@ contract GameV1Bot {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "not owner");
+        require(msg.sender == owner, "you don't have the rights of an owner");
         _;
     }
 
@@ -110,7 +110,7 @@ contract GameV1Bot {
         uint amount = balances[msg.sender];
         balances[msg.sender] = 0;
         bool transferred = payable(msg.sender).send(amount);
-        require(transferred, "Failed to send Ether");
+        require(transferred, "failed to send Ether");
     }
 
     function addLiquidity() public payable onlyOwner {
@@ -121,7 +121,7 @@ contract GameV1Bot {
     }
 
     function withdrawLiquidity(uint amount) public onlyOwner {
-        require(amount > 0, "zero amount");
+        require(balances[bot] >= amount, "amount is greater than the balance");
         balances[bot] -= amount;
         bool transferred = payable(msg.sender).send(amount);
         require(transferred, "Failed to send Ether");
