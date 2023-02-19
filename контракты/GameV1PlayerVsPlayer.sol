@@ -3,6 +3,11 @@
 pragma solidity ^0.8.17;
 
 contract GameV1PlayerVsPlayer {
+    address public factory;
+
+    constructor() {
+        factory = msg.sender;
+    }
 
     uint constant public BET_MIN = 0.0001 ether;        
     uint constant public REVEAL_TIMEOUT = 10 minutes;  
