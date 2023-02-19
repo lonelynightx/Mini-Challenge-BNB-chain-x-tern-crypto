@@ -163,7 +163,7 @@ contract GameV1PlayerVsPlayer {
             addrB.transfer(address(this).balance);
         }
 
-        if (getContractBalance() < 0) {
+        if (getContractBalance() == 0) {
             selfdestruct(payable(factory));
         }
     }
