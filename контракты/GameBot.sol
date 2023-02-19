@@ -64,8 +64,9 @@ contract GameV1Bot {
 
     function playVsBot(Choice choice) public payable {
         require(verify[msg.sender] == true, "user dont verify");
-        require(msg.value == 0.01 ether, "not enough ethereum");
+        require(msg.value <= getMaxRate(), "value is greater than the maximum bid");
 
+        uint rate = msg.value;
         uint currentIndexPlayer = playerIndex[msg.sender];
         address player = players[currentIndexPlayer];
 
@@ -73,33 +74,33 @@ contract GameV1Bot {
         botResponseGeneration();
         
         if (playerChoice == botChoice) {
-            balances[player] += 0.01 ether;
+            balances[player] += rate;
         } else if (playerChoice == Choice.Rock) {
             if (botChoice == Choice.Paper) {
                 // player: rock, bot: paper, bot win
-                balances[bot] += 0.01 ether;
+                balances[bot] += rate;
             } else {
                 // player: rock, bot: scissor, player win
-                balances[bot] -= 0.01 ether;
-                balances[player] += 0.02 ether;
+                balances[bot] -= rate;
+                balances[player] += rate*2;
             }
         } else if (playerChoice == Choice.Paper) {
             if (botChoice == Choice.Scissor) {
                 // player: paper, bot: scissor, bot win
-                balances[bot] += 0.01 ether;
+                balances[bot] += rate;
             } else {
                 // player: paper, bot: rock, player win
-                balances[bot] -= 0.01 ether;
-                balances[player] += 0.02 ether;
+                balances[bot] -= rate;
+                balances[player] += rate*2;
             }
         } else if (playerChoice == Choice.Scissor) {
             if (botChoice == Choice.Rock) {
                 // player: scissor, bot: rock, bot win
-                balances[bot] += 0.01 ether;
+                balances[bot] += rate;
             } else {
                 // player: scissor, bot: paper, player win
-                balances[bot] -= 0.01 ether;
-                balances[player] += 0.02 ether;
+                balances[bot] -= rate;
+                balances[player] += rate*2;
             }
         }
     }
@@ -127,4 +128,8 @@ contract GameV1Bot {
         require(transferred, "Failed to send Ether");
     }
 
+    function getMaxRate() public returns(uint) {
+        uint maxRate = (balances[bot])/2;
+        return maxRate;
+    }
 }
