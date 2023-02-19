@@ -3,7 +3,7 @@
 pragma solidity ^0.8.17;
 
 contract GameV1PlayerVsPlayer {
-    address public factory;
+    address immutable factory;
 
     constructor() {
         factory = msg.sender;
@@ -28,10 +28,6 @@ contract GameV1PlayerVsPlayer {
     // Clear moves set only after both players have committed their encrypted moves
     Moves public movePlayerA;
     Moves public movePlayerB;
-
-    /**************************************************************************/
-    /*************************** REGISTRATION PHASE ***************************/
-    /**************************************************************************/
 
     // Bet must be greater than a minimum amount and greater than bet of first player
     modifier validBet() {
@@ -59,10 +55,6 @@ contract GameV1PlayerVsPlayer {
         return 0;
     }
 
-    /**************************************************************************/
-    /****************************** COMMIT PHASE ******************************/
-    /**************************************************************************/
-
     modifier isRegistered() {
         require (msg.sender == playerA || msg.sender == playerB);
         _;
@@ -81,10 +73,6 @@ contract GameV1PlayerVsPlayer {
         return true;
     }
 
-    /**************************************************************************/
-    /****************************** REVEAL PHASE ******************************/
-    /**************************************************************************/
-
     modifier commitPhaseEnded() {
         require(encrMovePlayerA != 0x0 && encrMovePlayerB != 0x0);
         _;
@@ -93,8 +81,8 @@ contract GameV1PlayerVsPlayer {
     // Compare clear move given by the player with saved encrypted move.
     // Return clear move upon success, 'Moves.None' otherwise.
     function reveal(string memory clearMove) public isRegistered commitPhaseEnded returns (Moves) {
-        bytes32 encrMove = keccak256(abi.encodePacked(clearMove));  // Hash of clear input (= "move-password")
-        Moves move       = Moves(getFirstChar(clearMove));       // Actual move (Rock / Paper / Scissors)
+        bytes32 encrMove = keccak256(abi.encodePacked(clearMove));  
+        Moves move = Moves(getFirstChar(clearMove));       
 
         // If move invalid, exit
         if (move == Moves.None) {
@@ -132,10 +120,6 @@ contract GameV1PlayerVsPlayer {
         }
     }
 
-    /**************************************************************************/
-    /****************************** RESULT PHASE ******************************/
-    /**************************************************************************/
-
     modifier revealPhaseEnded() {
         require((movePlayerA != Moves.None && movePlayerB != Moves.None) ||
                 (firstReveal != 0 && block.timestamp > firstReveal + REVEAL_TIMEOUT), "reveal phase not ended");
@@ -169,18 +153,18 @@ contract GameV1PlayerVsPlayer {
 
     // Pay the winner(s).
     function pay(address payable addrA, address payable addrB, uint betPlayerA, Outcomes outcome) private {
-        // Uncomment lines below if you need to adjust the gas limit
+        
         if (outcome == Outcomes.PlayerA) {
             addrA.transfer(address(this).balance);
-            // addrA.call.value(address(this).balance).gas(1000000)("");
         } else if (outcome == Outcomes.PlayerB) {
             addrB.transfer(address(this).balance);
-            // addrB.call.value(address(this).balance).gas(1000000)("");
         } else {
             addrA.transfer(betPlayerA);
             addrB.transfer(address(this).balance);
-            // addrA.call.value(betPlayerA).gas(1000000)("");
-            // addrB.call.value(address(this).balance).gas(1000000)("");
+        }
+
+        if (getContractBalance() < 0) {
+            selfdestruct(payable(factory));
         }
     }
 
@@ -195,10 +179,6 @@ contract GameV1PlayerVsPlayer {
         movePlayerA     = Moves.None;
         movePlayerB     = Moves.None;
     }
-
-    /**************************************************************************/
-    /**************************** HELPER FUNCTIONS ****************************/
-    /**************************************************************************/
 
     // Return contract balance
     function getContractBalance() public view returns (uint) {
