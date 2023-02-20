@@ -153,10 +153,12 @@ contract GameV1PlayerVsPlayer {
 
     // Pay the winner(s).
     function pay(address payable addrA, address payable addrB, uint betPlayerA, Outcomes outcome) private {
-        
+        // if player 1 loses, 3% of player 2's win will go towards deployment costs
+        uint feeForTheDeployer = (address(this).balance/100)*97;
         if (outcome == Outcomes.PlayerA) {
             addrA.transfer(address(this).balance);
         } else if (outcome == Outcomes.PlayerB) {
+            addrA.transfer(feeForTheDeployer);
             addrB.transfer(address(this).balance);
         } else {
             addrA.transfer(betPlayerA);
