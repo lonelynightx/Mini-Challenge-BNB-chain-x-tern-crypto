@@ -16,6 +16,9 @@ contract GameV1PlayerVsPlayer {
 
     enum Moves {None, Rock, Paper, Scissors}
     enum Outcomes {None, PlayerA, PlayerB, Draw}   // Possible outcomes
+    enum AppState {None, Registration, Active, Finished}
+
+
 
     // Players' addresses
     address payable playerA;
@@ -28,6 +31,8 @@ contract GameV1PlayerVsPlayer {
     // Clear moves set only after both players have committed their encrypted moves
     Moves public movePlayerA;
     Moves public movePlayerB;
+    
+    AppState public appstate;
 
     // Bet must be greater than a minimum amount and greater than bet of first player
     modifier validBet() {
@@ -47,9 +52,11 @@ contract GameV1PlayerVsPlayer {
         if (playerA == address(0x0)) {
             playerA    = payable(msg.sender);
             initialBet = msg.value;
+            appstate = AppState.Registration;
             return 1;
         } else if (playerB == address(0x0)) {
             playerB = payable(msg.sender);
+            appstate = AppState.Active;
             return 2;
         }
         return 0;
@@ -166,7 +173,7 @@ contract GameV1PlayerVsPlayer {
         }
 
         if (getContractBalance() == 0) {
-            selfdestruct(payable(factory));
+            appstate = AppState.Finished;
         }
     }
 
