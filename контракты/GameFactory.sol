@@ -6,6 +6,7 @@ import "./GameV1PlayerVsPlayer.sol";
 contract GameFactory {
     address private owner;
     uint public createdCount = 0;
+    address[] public games;
 
     event gameCreated(address indexed creator, address game, uint count);
     
@@ -22,6 +23,7 @@ contract GameFactory {
             game := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
         createdCount++;
+        games.push(game);
         emit gameCreated(msg.sender, game, createdCount);
     }
 }
