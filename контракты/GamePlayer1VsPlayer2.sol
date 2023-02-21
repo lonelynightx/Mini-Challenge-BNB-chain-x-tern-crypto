@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-contract GameV1PlayerVsPlayer {
+contract GamePlayer1vsPlayer2 {
     address immutable factory;
 
     constructor() {
