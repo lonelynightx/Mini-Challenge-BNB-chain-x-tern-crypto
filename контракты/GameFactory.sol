@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import "./GameV1PlayerVsPlayer.sol";
+import "./GamePlayer1vsPlayer2.sol";
 
 contract GameFactory {
     address private owner;
@@ -16,7 +16,7 @@ contract GameFactory {
 
     function createGame() public {
         address game;
-        bytes memory bytecode = type(GameV1PlayerVsPlayer).creationCode;
+        bytes memory bytecode = type(GamePlayer1vsPlayer2).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(msg.sender, createdCount));
         
         assembly {
