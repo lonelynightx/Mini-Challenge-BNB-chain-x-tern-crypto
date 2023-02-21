@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./VRFv2Consumer.sol";
 
-contract GameV1Bot {
+contract GameBotV1 {
     VRFv2Consumer public VRFv2;
 
     address private owner;
