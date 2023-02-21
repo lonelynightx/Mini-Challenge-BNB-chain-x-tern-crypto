@@ -8,6 +8,6 @@ This is a decentralized "Stone-Scissors-Paper" game app.
 
 ###### Dapp consists of 4 smart contracts:
 1. GameFactory.sol - contract factory for 1vs1 games. Creates a separate contract for each new game.
-2. GamePlayerVsPlayer.sol - is created by the contract factory, in this contract players fight 1 vs 1.
+2. GameV1PlayerVsPlayer.sol - is created by the contract factory, in this contract players fight 1 vs 1.
 3. GameBot.sol - contract to play against a smart contract.
 4. VRFv2Consumer.sol - generates random numbers thanks to the VRF chain, based on random numbers the Gamebot.sol contract works.
