@@ -24,6 +24,12 @@ contract GameV1PlayerVsPlayer {
     address payable playerA;
     address payable playerB;
 
+    // check
+    address public playerAaddress = playerA;
+    address public playerBaddress = playerB;
+
+    
+
     // Encrypted moves
     bytes32 private encrMovePlayerA;
     bytes32 private encrMovePlayerB;
